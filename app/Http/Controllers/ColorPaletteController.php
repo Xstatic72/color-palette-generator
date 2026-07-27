@@ -20,6 +20,8 @@ class ColorPaletteController extends Controller
 
     public function generate(Request $request)
     {
+        $totalColors = (int) $request->input('total_colors', 5);
+        $totalColors = min($totalColors, 200);
         // Random color using HSL values
         // $baseHue = self::PRIMARY_HUES[array_rand(self::PRIMARY_HUES)];
         // $colors = [];
@@ -37,9 +39,12 @@ class ColorPaletteController extends Controller
         // Random color using RGB values
         $baseColor = array_rand(self::PRIMARY_HUES);
         $colors = [];
+        $maxStep = 150 / max(1, $totalColors);
 
-        for ($i = 0; $i < 5; $i++) {
-            $secondary= rand(0, 120);
+        for ($i = 0; $i < $totalColors; $i++) {
+            $min = (int) ($i * $maxStep);
+            $max= min(150, (int) (($i + 1) * $maxStep));
+            $secondary= rand($min, $max);
 
             $r= ($baseColor === 'r') ? 255 : $secondary;
             $g= ($baseColor === 'g') ? 255 : $secondary;
